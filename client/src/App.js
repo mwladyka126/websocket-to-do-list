@@ -8,7 +8,7 @@ class App extends React.Component {
     taskName: "",
   };
   componentDidMount() {
-    this.socket = io.connect("localhost:3000");
+    this.socket = io.connect("localhost:8000");
     this.socket.on("removeTask", (taskId) => this.removeTask(taskId));
     this.socket.on("addTask", (task) => this.addTask(task));
     this.socket.on("updateData", (tasks) => this.updateTasks(tasks));
@@ -35,7 +35,9 @@ class App extends React.Component {
   updateTasks = (tasks) => {
     this.setState({ tasks });
   };
+
   render() {
+    const { tasks, taskName } = this.state;
     return (
       <div className="App">
         <header>
@@ -46,7 +48,7 @@ class App extends React.Component {
           <h2>Tasks</h2>
 
           <ul className="tasks-section__list" id="tasks-list">
-            {this.state.tasks.map((task) => (
+            {tasks.map((task) => (
               <li className="task" key={task.id}>
                 {task.name}{" "}
                 <button
@@ -69,16 +71,12 @@ class App extends React.Component {
               type="text"
               placeholder="Type your description"
               id="task-name"
-              value={this.state.taskName}
+              value={taskName}
               onChange={(event) =>
                 this.setState({ taskName: event.target.value })
               }
             />
-            <button
-              className="btn"
-              type="submit"
-              disabled={!this.state.taskName}
-            >
+            <button className="btn" type="submit" disabled={!taskName}>
               Add
             </button>
           </form>
